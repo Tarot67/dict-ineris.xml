@@ -11,8 +11,8 @@ il extrait aussi bien les DT les DICT et les ATUs
 Lxml
 Beautifull Soup 4
 
-il cree un fichier txt avec le caracter ":" comme
-separateur. 
+il crée un fichier txt avec le caractere ":" comme
+séparateur. 
 
 
 UTILISATION:
@@ -26,6 +26,6 @@ le fichier de sortie sera de la forme
 
 
 (La doc est en français car ce programme n'a pas
-vocation a être utilisé ailleur qu'en France)
+vocation a être utilisé ailleurs qu'en France)
 
 This program script is only for french people! 
