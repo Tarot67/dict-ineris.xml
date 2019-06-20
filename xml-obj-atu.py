@@ -232,7 +232,7 @@ if __name__ == '__main__':
 	#evitant ainsi les erreurs! car ces listes
 	#commence a etre tres tres longue
 	namespace=['t', '', 'gu22', 'gu3']
-	valeur_namespace_dt=['dt', 'partiedt', 'dtliee']
+	valeur_namespace_dt=['dt', 'partiedt']
 	valeur_namespace_dict=['dict', 'partiedict']
 	valeur_namespace_atu=['atu', 'partieatu']
 
