@@ -8,7 +8,7 @@ class dtdict:
 	def __init__(self, descripteur):
 		self.extract = None
 		self.extract_branch = None
-		self.emprise = ["t:emprise", "emprise", "gu22:emprise" ]
+		self.emprise = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "emprise" ]]
 		self.descripteur = descripteur
 		self.soup = BeautifulSoup(self.descripteur,"lxml")
 		self.partie = None
@@ -19,18 +19,18 @@ class dtdict:
 
 	def extraction1(self):
 		self.resul = self.soup.find(self.partie).find(self.extract).text
-		if self.partie == ["t:dt", "t:partiedt", "dt", "partiedt", "dtliee", "gu22:dt", "gu22:dtliee", "gu22:partiedt" ] and self.extract == ["noconsultationduteleservice", "noconsultationduteleserviceseize", "t:noconsultationduteleservice", "t:noconsultationduteleserviceseize", "gu22:noconsultationduteleserviceseize", "gu22:noconsultationduteleservice" ] and self.resul != None:
+		if self.partie == [ i+j if i == '' else i + ':' +j  for i in namespace for j in valeur_namespace_dt ] and self.extract == [i+j if i == '' else i + ':' +j  for i in namespace for j in  ["noconsultationduteleservice", "noconsultationduteleserviceseize"]] and self.resul != None:
 			origine = re.search("([0-9]+)([A-Z])(.*)",str(self.resul))
 			self.dt_origine = origine.group(2)
 			#print(origine.group(2))
 			#print(origine.groups())
-		if self.partie == ["t:dict", "t:partiedict", "dict", "partiedict", "gu22:dict", "gu22:partiedict" ] and self.extract == ["noconsultationduteleservice", "noconsultationduteleserviceseize", "t:noconsultationduteleservice", "t:noconsultationduteleserviceseize", "gu22:noconsultationduteleservice" ] and self.resul != None:
+		if self.partie == [ i+j if i == '' else i + ':' +j  for i in namespace for j in valeur_namespace_dict ] and self.extract == [  i+j if i == '' else i + ':' +j  for i in namespace for j in ["noconsultationduteleservice", "noconsultationduteleserviceseize"]] and self.resul != None:
 			origine = re.search("([0-9]+)([A-Z])(.*)",str(self.resul))
 			self.dict_origine = origine.group(2)
 			#print(origine.group(2))
 			#print(origine.groups())
 
-		if self.partie == ["t:atu", "t:partieatu", "atu", "partieatu", "gu22:atu" ] and self.extract == ["noconsultationduteleservice", "noconsultationduteleserviceseize", "t:noconsultationduteleservice", "t:noconsultationduteleserviceseize", "gu22:noconsultationduteleservice" ] and self.resul != None:
+		if self.partie == [ i+j if i == '' else i + ':' +j  for i in namespace for j in valeur_namespace_atu ] and self.extract == [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noconsultationduteleservice", "noconsultationduteleserviceseize"]] and self.resul != None:
 			origine = re.search("([0-9]+)([A-Z])(.*)",str(self.resul))
 			self.atu_origine = origine.group(2)
 
@@ -78,21 +78,13 @@ class dtdict:
 		ma_liste = self.soup.find(self.partie).find(self.extract).findChildren(self.extract_branch)
 		#print(ma_liste)
 		if len(ma_liste) > 1:
-			if re.search("<t:naturedestravaux>", str(ma_liste)):
-				ma_sortie = re.sub("<t:naturedestravaux>","",str(ma_liste))
-				ma_liste= ma_sortie
-				ma_sortie = re.sub("</t:naturedestravaux>","",ma_liste)
-				ma_liste = ma_sortie
-			elif re.search("<naturedestravaux>", str(ma_liste)):
-				ma_sortie = re.sub("<naturedestravaux>","",str(ma_liste))
-				ma_liste= ma_sortie
-				ma_sortie = re.sub("</naturedestravaux>","",ma_liste)
-				ma_liste = ma_sortie
-			else:
-				ma_sortie = re.sub("<gu22:naturedestravaux>","",str(ma_liste))
-				ma_liste= ma_sortie
-				ma_sortie = re.sub("</gu22:naturedestravaux>","",ma_liste)
-				ma_liste = ma_sortie
+			for k in [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["naturedestravaux"]]:
+				ma_sortie = re.sub("<" + k + ">","",str(ma_liste))
+				if str(ma_liste) != ma_sortie:
+						ma_liste = ma_sortie
+						ma_sortie = re.sub("</" + k + ">","",ma_liste)
+						ma_liste = ma_sortie
+
 			ma_sortie = re.sub("\[","",ma_liste)
 			ma_liste = ma_sortie
 			ma_sortie = re.sub("\]","",ma_liste)
@@ -107,44 +99,40 @@ class dtdict:
 
 class const_dtdict:
 	def __init__(self):
-		self._PARTIEDT = ["t:dt", "t:partiedt", "dt", "partiedt", "dtliee", "gu22:dt", "gu22:dtliee", "gu22:partiedt" ]
-		self._PARTIEDICT = ["t:dict", "t:partiedict", "dict", "partiedict", "gu22:dict", "gu22:partiedict" ]
-		self._PARTIEATU = ["t:atu", "t:partieatu", "atu", "partieatu", "gu22:atu" ]
-		self._NUM_DICT = ["noconsultationduteleservice", "noconsultationduteleserviceseize", "t:noconsultationduteleservice", "t:noconsultationduteleserviceseize", "gu22:noconsultationduteleservice" ]
-		self._NUM_DT = ["noconsultationduteleservice", "noconsultationduteleserviceseize", "t:noconsultationduteleservice", "t:noconsultationduteleserviceseize", "gu22:noconsultationduteleserviceseize", "gu22:noconsultationduteleservice" ]
-		self._NUM_ATU =["noconsultationduteleservice", "noconsultationduteleserviceseize", "t:noconsultationduteleservice", "t:noconsultationduteleserviceseize", "gu22:noconsultationduteleservice" ]
-		self._SOUSPARTIEATUREPONSE = [ "t:chantiertermineouchantieravenir", "chantiertermineouchantieravenir" , "gu22:chantiertermineouchantieravenir" ]
-		self._ATU_REPONSE = [ "t:reponseattenduechantieravenir", "reponseattenduechantieravenir", "gu22:reponseattenduechantieravenir" ]
+		self._PARTIEDT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in valeur_namespace_dt ]
+		self._PARTIEDICT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in valeur_namespace_dict ]
+		self._PARTIEATU = [ i+j if i == '' else i + ':' +j  for i in namespace for j in valeur_namespace_atu ]
+		self._NUM_DICT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noconsultationduteleservice", "noconsultationduteleserviceseize"]]
+		self._NUM_DT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noconsultationduteleservice", "noconsultationduteleserviceseize"]]
+		self._NUM_ATU = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noconsultationduteleservice", "noconsultationduteleserviceseize"]]
+		self._SOUSPARTIEATUREPONSE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "chantiertermineouchantieravenir" ]]
+		self._ATU_REPONSE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "reponseattenduechantieravenir" ]]
 
-		self._NUM_AFFAIRE_DT = ["noaffaireduresponsableduprojet","t:noaffaireduresponsableduprojet", "gu22:noaffaireduresponsableduprojet" ]
-		self._NUM_AFFAIRE_DICT = ["noaffairedelexecutantdestravaux","t:noaffairedelexecutantdestravaux", "noaffairedelexecutantdestravaux", "gu22:noaffairedelexecutantdestravaux" ]
-		self._SOUSPARTIEOEUVRE = (["t:representantduresponsabledeprojet", "gu22:representantduresponsabledeprojet", "representantduresponsabledeprojet"])
-		self._SOUSPARTIEATU = (["t:personneordonnantlestravauxurgents", "gu22:personneordonnantlestravauxurgents", "personneordonnantlestravauxurgents"])
-		self._DATEDECLARATION = ["datedeladeclaration","t:datedeladeclaration","gu22:datedeladeclaration", "date", "t:date", "gu22:date" ]
-		self._DATETRAVAUX = ["dateprevuepourlecommencementdestravaux","t:dateprevuepourlecommencementdestravaux","gu22:dateprevuepourlecommencementdestravaux", "datedebutdestravaux", "t:datedebutdestravaux", "gu22:datedebutdestravaux" ]
-		self._PROJETCAL = ["projetetsoncalendrier", "travauxetleurcalendrier","t:travauxetleurcalendrier","t:projetetsoncalendrier","gu22:projetetsoncalendrier", "gu22:travauxetleurcalendrier" ]
-		self._CHAMPMELCONTACT = ["t:courriel", "courriel", "gu22:courriel" ]
-		self._CHAMPENTREPOEUVRE = ["denomination","t:denomination", "gu22:denomination", "gu22:nom", "t:nom", "nom" ]
-		self._CHAMPNUMVOIEOEUVRE = ["t:numero", "numero", "gu22:numero" ]
-		self._CHAMPVOIEOEUVRE = ["t:voie", "voie", "gu22:voie" ]
-		self._CHAMPCPOEUVRE = ["t:codepostal", "codepostal", "gu22:codepostal" ]
-		self._CHAMPCOMMUNEOEUVRE = ["t:commune", "commune", "gu22:commune" ]
-		self._CHAMPTELOEUVRE = ["t:tel", "tel", "gu22:tel" ]
-		self._CHAMPFAXOEUVRE = ["t:fax", "fax", "gu22:fax" ]
-		self._CHAMPCONTACT = (["t:personneacontacter", "personneacontacter",
-					"nomdelapersonneacontacter","t:nomdelapersonneacontacter", "gu22:nomdelapersonneacontacter", "gu22:personneacontacter" ])
-		self._CONJOINTE = ["declarationconjointedtdict","t:declarationconjointedtdict", "gu22:declarationconjointedtdict" ]
-		self._SOUSPARTIEEXECUTANT = (["t:executantdestravaux", 
-                        "executantdestravaux", "gu22:executantdestravaux" ])
-		self._CHAMPEMPRISE = (["t:emplacementduprojet", "emplacementduprojet",
-                 "t:emplacementdestravaux", "emplacementdestravaux", "gu22:emplacementdestravaux", "gu22:emplacementduprojet", "travauxemplacementdureedescription", "t:travauxemplacementdureedescription", "gu22:travauxemplacementdureedescription" ])
-		self._CHAMPADDRTRA = ["t:adresse", "adresse", "gu22:adresse" ]
-		self._CHAMPCPTRA = ["t:cp", "cp", "gu22:cp" ]
-		self._CHAMPCOMMUNETRA = ["t:communeprincipale", "communeprincipale", "gu22:communeprincipale", "commune", "t:commune", "gu22:commune" ]
+		self._NUM_AFFAIRE_DT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noaffaireduresponsableduprojet" ]]
+		self._NUM_AFFAIRE_DICT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noaffairedelexecutantdestravaux" ]]
+		self._SOUSPARTIEOEUVRE = ([ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "representantduresponsabledeprojet" ]])
+		self._SOUSPARTIEATU = ([ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "personneordonnantlestravauxurgents" ]])
+		self._DATEDECLARATION = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["datedeladeclaration", "date" ]]
+		self._DATETRAVAUX = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["dateprevuepourlecommencementdestravaux", "datedebutdestravaux" ]]
+		self._PROJETCAL = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["projetetsoncalendrier", "travauxetleurcalendrier" ]]
+		self._CHAMPMELCONTACT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "courriel" ]]
+		self._CHAMPENTREPOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["denomination", "nom" ]]
+		self._CHAMPNUMVOIEOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "numero" ]]
+		self._CHAMPVOIEOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "voie" ]]
+		self._CHAMPCPOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "codepostal" ]]
+		self._CHAMPCOMMUNEOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "commune" ]]
+		self._CHAMPTELOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "tel" ]]
+		self._CHAMPFAXOEUVRE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "fax" ]]
+		self._CHAMPCONTACT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["personneacontacter", "nomdelapersonneacontacter" ]]
+		self._CONJOINTE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["declarationconjointedtdict" ]]
+		self._SOUSPARTIEEXECUTANT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["executantdestravaux"]]
+		self._CHAMPEMPRISE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "emplacementduprojet", "emplacementdestravaux", "travauxemplacementdureedescription" ]]
+		self._CHAMPADDRTRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "adresse" ]]
+		self._CHAMPCPTRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "cp" ]]
+		self._CHAMPCOMMUNETRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["communeprincipale", "commune" ]]
 		self._AVANTEMPRISE = ["gml:linearring", "ns2:linearring"]
 		self._EMPRISE = ["gml:coordinates", "ns2:coordinates", "gml:poslist", "ns2:poslist"]
-		self._NATURE_TRA = (["naturedestravaux", "t:naturedestravaux", "gu22:naturedestravaux",
-				"travauxetmoyensmisenoeuvre", "t:travauxetmoyensmisenoeuvre", "gu22:travauxetmoyensmisenoeuvre" ])
+		self._NATURE_TRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["naturedestravaux", "travauxetmoyensmisenoeuvre" ]]
 
 class descrit_toi_DT:
 	def __init__(self):
@@ -204,6 +192,19 @@ if __name__ == '__main__':
 	#print('toto' ,len(sys.argv))
 	#print(sys.argv[-1:])
 	#for arg  in sys.argv:
+
+	#nouvelle technique pour construire les listes
+	#de balises j'utilise une liste namespace
+	#qui contient tout les namespaces
+	#ensuite a l'aide de liste comprehention
+	#je construie cette liste dynamiquement
+	#evitant ainsi les erreurs! car ces listes
+	#commence a etre tres tres longue
+	namespace=['t', '', 'gu22', 'gu3']
+	valeur_namespace_dt=['dt', 'partiedt', 'dtliee']
+	valeur_namespace_dict=['dict', 'partiedict']
+	valeur_namespace_atu=['atu', 'partieatu']
+
 	value = sys.argv[-1:][0]
 	descripteur = open(value)
 	
