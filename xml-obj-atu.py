@@ -96,6 +96,29 @@ class dtdict:
 		else:
 			self.resul = self.soup.find(self.partie).find(self.extract).findChild(self.extract_branch).text
 
+	
+	def extraction5(self):
+		ma_liste = self.soup.find(self.partie).find(self.extract).findChildren(self.extract_branch)
+		#print(ma_liste)
+		if len(ma_liste) > 1:
+			for k in [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["techniquesutilisees"]]:
+				ma_sortie = re.sub("<" + k + ">","",str(ma_liste))
+				if str(ma_liste) != ma_sortie:
+						ma_liste = ma_sortie
+						ma_sortie = re.sub("</" + k + ">","",ma_liste)
+						ma_liste = ma_sortie
+
+			ma_sortie = re.sub("\[","",ma_liste)
+			ma_liste = ma_sortie
+			ma_sortie = re.sub("\]","",ma_liste)
+			ma_liste = ma_sortie
+			ma_sortie = re.sub(",","",ma_liste)
+			#print("masortie vaut" + ma_sortie)
+			self.resul=ma_sortie
+
+		else:
+			self.resul = self.soup.find(self.partie).find(self.extract).findChild(self.extract_branch).text
+
 
 class const_dtdict:
 	def __init__(self):
@@ -107,7 +130,6 @@ class const_dtdict:
 		self._NUM_ATU = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noconsultationduteleservice", "noconsultationduteleserviceseize"]]
 		self._SOUSPARTIEATUREPONSE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "chantiertermineouchantieravenir" ]]
 		self._ATU_REPONSE = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "reponseattenduechantieravenir" ]]
-
 		self._NUM_AFFAIRE_DT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noaffaireduresponsableduprojet" ]]
 		self._NUM_AFFAIRE_DICT = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["noaffairedelexecutantdestravaux" ]]
 		self._SOUSPARTIEOEUVRE = ([ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "representantduresponsabledeprojet" ]])
@@ -133,6 +155,8 @@ class const_dtdict:
 		self._AVANTEMPRISE = ["gml:linearring", "ns2:linearring"]
 		self._EMPRISE = ["gml:coordinates", "ns2:coordinates", "gml:poslist", "ns2:poslist"]
 		self._NATURE_TRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["naturedestravaux", "travauxetmoyensmisenoeuvre" ]]
+		self._DESCRI_PROJ = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "decrivezleprojet", "decrivezlestravaux" ]]
+		self._MOYENS_UTIL = [i+j if i == '' else i + ':' +j  for i in namespace for j in [ "techniquesutilisees" ]]
 
 class descrit_toi_DT:
 	def __init__(self):
@@ -145,12 +169,15 @@ class descrit_toi_DT:
 			"_CHAMPCOMMUNEOEUVRE":["extraction2","_SOUSPARTIEOEUVRE"],
 			"_CHAMPCONTACT":["extraction2","_SOUSPARTIEOEUVRE"],
 			"_CHAMPMELCONTACT":["extraction2","_SOUSPARTIEOEUVRE"],
+			"_CHAMPTELOEUVRE":["extraction2","_SOUSPARTIEOEUVRE"],
 			"_CHAMPADDRTRA":["extraction2","_CHAMPEMPRISE"],
 			"_CHAMPCOMMUNETRA":["extraction2","_CHAMPEMPRISE"],
 			"_DATEDECLARATION":"extraction1",
 			"_DATETRAVAUX":["extraction2","_PROJETCAL"],
 			"_EMPRISE":["extraction3","_AVANTEMPRISE"],
-			"_NATURE_TRA":["extraction4","_PROJETCAL"]})
+			"_NATURE_TRA":["extraction4","_PROJETCAL"],
+			"_MOYENS_UTIL":["extraction5","_PROJETCAL"],
+			"_DESCRI_PROJ":["extraction2","_PROJETCAL"]})
 
 class descrit_toi_DICT:
 	def __init__(self):
@@ -163,12 +190,15 @@ class descrit_toi_DICT:
 			"_CHAMPCOMMUNEOEUVRE":["extraction2","_SOUSPARTIEEXECUTANT"],
 			"_CHAMPCONTACT":["extraction2","_SOUSPARTIEEXECUTANT"],
 			"_CHAMPMELCONTACT":["extraction2","_SOUSPARTIEEXECUTANT"],
+			"_CHAMPTELOEUVRE":["extraction2","_SOUSPARTIEEXECUTANT"],
 			"_CHAMPADDRTRA":["extraction2","_CHAMPEMPRISE"],
 			"_CHAMPCOMMUNETRA":["extraction2","_CHAMPEMPRISE"],
 			"_DATEDECLARATION":"extraction1",
 			"_DATETRAVAUX":["extraction2","_PROJETCAL"],
 			"_EMPRISE":["extraction3","_AVANTEMPRISE"],
-			"_NATURE_TRA":["extraction4","_PROJETCAL"]})
+			"_NATURE_TRA":["extraction4","_PROJETCAL"],
+			"_MOYENS_UTIL":["extraction5","_PROJETCAL"],
+			"_DESCRI_PROJ":["extraction2","_PROJETCAL"]})
 
 class descrit_toi_ATU:
      def __init__(self):
@@ -181,6 +211,7 @@ class descrit_toi_ATU:
                         "_CHAMPCOMMUNEOEUVRE":["extraction2","_SOUSPARTIEATU"],
                         "_CHAMPCONTACT":["extraction2","_SOUSPARTIEATU"],
                         "_CHAMPMELCONTACT":["extraction2","_SOUSPARTIEATU"],
+			"_CHAMPTELOEUVRE":["extraction2","_SOUSPARTIEATU"],
                         "_CHAMPADDRTRA":["extraction2","_CHAMPEMPRISE"],
                         "_CHAMPCOMMUNETRA":["extraction2","_CHAMPEMPRISE"],
                         "_DATEDECLARATION":"extraction1",
