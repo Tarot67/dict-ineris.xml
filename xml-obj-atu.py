@@ -57,6 +57,7 @@ class dtdict:
 			#self.resul = self.soup.find(self.partie).find(self.extract).findAll(self.extract_branch)
 			self.resul = self.soup.find(self.partie).find(self.emprise).findChildren(self.extract_branch)
 			traite_liste=re.sub("ns2[:]","",str(self.resul))
+			traite_liste=re.sub("ns1[:]","",str(self.resul))
 			self.resul=traite_liste
 			traite_liste = re.sub("<poslist srsdimension=.2.>","",self.resul)
 			self.resul=traite_liste
@@ -152,8 +153,8 @@ class const_dtdict:
 		self._CHAMPADDRTRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "adresse" ]]
 		self._CHAMPCPTRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "cp" ]]
 		self._CHAMPCOMMUNETRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["communeprincipale", "commune" ]]
-		self._AVANTEMPRISE = ["gml:linearring", "ns2:linearring"]
-		self._EMPRISE = ["gml:coordinates", "ns2:coordinates", "gml:poslist", "ns2:poslist"]
+		self._AVANTEMPRISE = ["gml:linearring", "ns2:linearring", "ns1:linearring"]
+		self._EMPRISE = ["gml:coordinates", "ns2:coordinates", "gml:poslist", "ns2:poslist", "ns1:poslist" ]
 		self._NATURE_TRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["naturedestravaux", "travauxetmoyensmisenoeuvre" ]]
 		self._DESCRI_PROJ = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "decrivezleprojet", "decrivezlestravaux" ]]
 		self._MOYENS_UTIL = [i+j if i == '' else i + ':' +j  for i in namespace for j in [ "techniquesutilisees" ]]
