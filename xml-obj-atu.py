@@ -57,6 +57,7 @@ class dtdict:
 			#self.resul = self.soup.find(self.partie).find(self.extract).findAll(self.extract_branch)
 			self.resul = self.soup.find(self.partie).find(self.emprise).findChildren(self.extract_branch)
 			traite_liste=re.sub("ns2[:]","",str(self.resul))
+			self.resul=traite_liste
 			traite_liste=re.sub("ns1[:]","",str(self.resul))
 			self.resul=traite_liste
 			traite_liste = re.sub("<poslist srsdimension=.2.>","",self.resul)
