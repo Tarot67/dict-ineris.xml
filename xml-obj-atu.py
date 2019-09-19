@@ -154,8 +154,8 @@ class const_dtdict:
 		self._CHAMPADDRTRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "adresse" ]]
 		self._CHAMPCPTRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "cp" ]]
 		self._CHAMPCOMMUNETRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["communeprincipale", "commune" ]]
-		self._AVANTEMPRISE = ["gml:linearring", "ns2:linearring", "ns1:linearring"]
-		self._EMPRISE = ["gml:coordinates", "ns2:coordinates", "gml:poslist", "ns2:poslist", "ns1:poslist" ]
+                self._AVANTEMPRISE = [ i+j if i == '' else i + ':' +j  for i in namespace_geo for j in ["linearring"]]
+                self._EMPRISE = [ i+j if i == '' else i + ':' +j  for i in namespace_geo for j in ["coordinates","poslist"]]
 		self._NATURE_TRA = [ i+j if i == '' else i + ':' +j  for i in namespace for j in ["naturedestravaux", "travauxetmoyensmisenoeuvre" ]]
 		self._DESCRI_PROJ = [ i+j if i == '' else i + ':' +j  for i in namespace for j in [ "decrivezleprojet", "decrivezlestravaux" ]]
 		self._MOYENS_UTIL = [i+j if i == '' else i + ':' +j  for i in namespace for j in [ "techniquesutilisees" ]]
@@ -234,6 +234,7 @@ if __name__ == '__main__':
 	#evitant ainsi les erreurs! car ces listes
 	#commence a etre tres tres longue
 	namespace=['t', '', 'gu22', 'gu3','ns3']
+	namespace_geo=['gml','ns2','ns1']
 
 	#valeur_namespace_dt=['dt', 'partiedt', 'dtliee']
 	valeur_namespace_dt=['dt', 'partiedt']
